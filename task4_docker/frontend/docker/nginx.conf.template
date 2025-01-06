@@ -32,7 +32,12 @@ server {
         add_header 'X-Debug-Host' $host;
         add_header 'X-Debug-Proxy' 'true';
     }
-
+    # Add health check endpoint
+    location /health {
+        access_log off;
+        add_header Content-Type text/plain;
+        return 200 'healthy\n';
+    }
     # Handle errors
     error_page 404 /404.html;
     error_page 500 502 503 504 /50x.html;
