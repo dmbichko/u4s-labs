@@ -1,12 +1,13 @@
 server {
     listen 80;
-    server_name ${DOMAIN_NAME};
+    server_name ${DOMAIN_NAME} *.ngrok-free.app;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name ${DOMAIN_NAME};
+    listen [::1]:443 ssl;
+    server_name ${DOMAIN_NAME} *.ngrok-free.app;
 
     ssl_certificate /etc/nginx/ssl/selfsigned.crt;
     ssl_certificate_key /etc/nginx/ssl/selfsigned.key;
@@ -26,25 +27,14 @@ server {
         try_files $uri /index.html;
     }
 
+
+
     location /api/ {
         proxy_pass http://backend:8081;
 
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
-        # CORS Headers
-        add_header Access-Control-Allow-Origin https://testwebsite always;
-        add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
-        add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization" always;
-        add_header Access-Control-Allow-Credentials true always;
-        if ($request_method = OPTIONS) {
-            add_header Access-Control-Allow-Origin https://testwebsite;
-            add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS";
-            add_header Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization";
-            return 204;
-        }
     }
+
     # Add health check endpoint
     location /health {
         access_log off;
