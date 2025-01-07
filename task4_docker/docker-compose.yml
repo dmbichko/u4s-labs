@@ -69,7 +69,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - REACT_APP_API_URL=https://192.168.10.94
+        - REACT_APP_API_URL=https://testwebsite
         - REACT_APP_API_PORT=443
     container_name: frontend_container
     environment:
